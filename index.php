@@ -1,4 +1,6 @@
 <?php
+include_once('./simple_html_dom.php');
+
 $data =  array(
     'sat_1_reading' =>  $_REQUEST['sat_1_reading'] or '',
     'sat_1_math' => $_REQUEST['sat_1_math'] or '',
@@ -45,3 +47,15 @@ $result = curl_exec($ch);
 
 //close connection
 curl_close($ch);
+
+// Die if error
+if (!$result) die('F*ck!');
+
+// Init DOM extract
+$html = str_get_html($result);
+
+// Find
+$score = 0;
+foreach ($html->find('#section_0 > div > div > h2 > strong > font:nth-child(2)') as $value) {
+	$score = $value->innertext;
+}
