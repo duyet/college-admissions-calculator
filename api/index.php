@@ -11,15 +11,15 @@ if (!isset($_REQUEST['rank_type'])) 				$_REQUEST['rank_type'] = '';
 if (!isset($_REQUEST['rank_value'])) 				$_REQUEST['rank_value'] = '';
 
 $data =  array(
-    'sat_1_reading' =>  $_REQUEST['sat_1_reading'] or '',
-    'sat_1_math' => $_REQUEST['sat_1_math'] or '',
-    'sat_subject_first' => $_REQUEST['sat_subject_first'] or '',
-    'sat_subject_second' => $_REQUEST['sat_subject_second'] or '',
-    'sat_subject_third' => $_REQUEST['sat_subject_third'] or '',
-    'class_size' => $_REQUEST['class_size'] or '',
-    'rank_type' => $_REQUEST['rank_type'] or 'exact',
-    'rank_value' => $_REQUEST['rank_value'] or ''
-    );
+	'sat_1_reading' =>  $_REQUEST['sat_1_reading'] or '',
+	'sat_1_math' => $_REQUEST['sat_1_math'] or '',
+	'sat_subject_first' => $_REQUEST['sat_subject_first'] or '',
+	'sat_subject_second' => $_REQUEST['sat_subject_second'] or '',
+	'sat_subject_third' => $_REQUEST['sat_subject_third'] or '',
+	'class_size' => $_REQUEST['class_size'] or '',
+	'rank_type' => $_REQUEST['rank_type'] or 'exact',
+	'rank_value' => $_REQUEST['rank_value'] or ''
+	);
 
 $url = 'http://www.toptieradmissions.com/resources/college-calculator/';
 $fields = array(
