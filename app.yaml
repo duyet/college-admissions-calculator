@@ -1,8 +1,14 @@
 application: college-calculator-qqweysa
-version: 1
+version: 2
 runtime: php55
 api_version: 1
 
 handlers:
+- url: /api/.*
+  script: api/index.php
+
+- url: /api.*
+  script: api/index.php
+
 - url: /.*
   script: index.php

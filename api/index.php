@@ -1,4 +1,7 @@
 <?php
+$start = microtime(true);
+@header('Access-Control-Allow-Origin: *');
+
 include_once('./simple_html_dom.php');
 
 if (!isset($_REQUEST['sat_1_reading'])) 			$_REQUEST['sat_1_reading'] = '';
@@ -11,14 +14,14 @@ if (!isset($_REQUEST['rank_type'])) 				$_REQUEST['rank_type'] = '';
 if (!isset($_REQUEST['rank_value'])) 				$_REQUEST['rank_value'] = '';
 
 $data =  array(
-	'sat_1_reading' =>  $_REQUEST['sat_1_reading'] or '',
-	'sat_1_math' => $_REQUEST['sat_1_math'] or '',
-	'sat_subject_first' => $_REQUEST['sat_subject_first'] or '',
-	'sat_subject_second' => $_REQUEST['sat_subject_second'] or '',
-	'sat_subject_third' => $_REQUEST['sat_subject_third'] or '',
-	'class_size' => $_REQUEST['class_size'] or '',
-	'rank_type' => $_REQUEST['rank_type'] or 'exact',
-	'rank_value' => $_REQUEST['rank_value'] or ''
+	'sat_1_reading' =>  $_REQUEST['sat_1_reading'],
+	'sat_1_math' => $_REQUEST['sat_1_math'],
+	'sat_subject_first' => $_REQUEST['sat_subject_first'],
+	'sat_subject_second' => $_REQUEST['sat_subject_second'],
+	'sat_subject_third' => $_REQUEST['sat_subject_third'],
+	'class_size' => $_REQUEST['class_size'],
+	'rank_type' => $_REQUEST['rank_type'],
+	'rank_value' => $_REQUEST['rank_value']
 	);
 
 $url = 'http://www.toptieradmissions.com/resources/college-calculator/';
@@ -56,11 +59,19 @@ curl_setopt($ch,CURLOPT_RETURNTRANSFER, 1);
 //execute post
 $result = curl_exec($ch);
 
+$errno = curl_errno($ch);
+if ($result == false) {
+    $error_message = curl_strerror($errno);
+    if (!$error_message) $$error_message = 'no data';
+    header('Content-Type: application/json');
+	//close connection
+	curl_close($ch);
+
+	die(json_encode(array('message' => $error_message, 'errno' => $errno, 'result' => $result, 'input' => $fields)));
+}
+
 //close connection
 curl_close($ch);
-
-// Die if error
-if (!$result) die('F*ck!');
 
 // Init DOM extract
 $html = str_get_html($result);
@@ -76,13 +87,13 @@ $result = array(
 	'rank' => 0
 );
 
-if (isset($score[0]) && isset($score[1])) {
+if (isset($scores[0]) && isset($scores[1])) {
 	$result['score'] = intval($scores[0]);
 	$result['rank'] = intval(trim(str_replace('out of 9', '', $scores[1])));
 }
 
 $result['input'] = $fields;
-$result['time'] = time();
+$result['time'] = microtime(true) - $start;
 
 header('Content-Type: application/json');
 echo json_encode($result);
